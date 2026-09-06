@@ -1,0 +1,516 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sys-bg:#050810;
+    --sys-panel:#0b1120;
+    --sys-panel-2:#0f1830;
+    --sys-line:#1e2a4a;
+    --glow:#4c8dff;
+    --glow-soft:rgba(76,141,255,0.35);
+    --purple:#8b5cf6;
+    --amber:#f59e0b;
+    --text-hi:#eaf1ff;
+    --text-mid:#93a4c9;
+    --text-dim:#57628a;
+    --rank-e:#6b7280;
+    --rank-d:#22c55e;
+    --rank-c:#3b82f6;
+    --rank-b:#a855f7;
+    --rank-a:#f59e0b;
+    --rank-s:#ef4444;
+  }
+  *{box-sizing:border-box;}
+  body,#hl-root{font-family:'Inter',sans-serif;color:var(--text-hi);}
+  .hl-wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px;background:var(--sys-bg);}
+  .hl-header{text-align:center;margin-bottom:24px;}
+  .hl-eyebrow{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;letter-spacing:2px;color:var(--glow);}
+  .hl-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:30px;margin:4px 0 6px;color:var(--text-hi);}
+  .hl-sub{font-size:14px;color:var(--text-mid);}
+  .hl-panel{background:linear-gradient(180deg,var(--sys-panel),var(--sys-panel-2));border:1px solid var(--sys-line);border-radius:10px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden;}
+  .hl-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--glow-soft),transparent);}
+  .hl-status-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
+  .hl-rank-badge{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:24px;border:1.5px solid currentColor;box-shadow:0 0 14px currentColor;flex-shrink:0;}
+  .hl-level-block{display:flex;align-items:center;gap:14px;}
+  .hl-level-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:26px;line-height:1;}
+  .hl-streak{text-align:right;}
+  .hl-streak-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:22px;color:var(--glow);}
+  .hl-streak-label{font-size:11px;color:var(--text-dim);letter-spacing:1px;}
+  .hl-xpbar-track{width:100%;height:14px;background:#060a14;border:1px solid var(--sys-line);border-radius:7px;overflow:hidden;}
+  .hl-xpbar-fill{height:100%;background:linear-gradient(90deg,var(--glow),var(--purple));transition:width .5s ease;box-shadow:0 0 10px var(--glow-soft);}
+  .hl-xptext{font-size:11px;color:var(--text-dim);margin-top:6px;display:flex;justify-content:space-between;}
+  .hl-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
+  .hl-stat{background:#060a14;border:1px solid var(--sys-line);border-radius:8px;padding:10px 12px;text-align:center;}
+  .hl-stat-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:19px;color:var(--text-hi);}
+  .hl-stat-lbl{font-size:10.5px;color:var(--text-dim);margin-top:2px;letter-spacing:.5px;}
+  .hl-roadmap-track{width:100%;height:8px;background:#060a14;border:1px solid var(--sys-line);border-radius:4px;overflow:hidden;margin-top:14px;}
+  .hl-roadmap-fill{height:100%;background:linear-gradient(90deg,var(--rank-d),var(--glow));transition:width .5s ease;}
+  .hl-roadmap-text{font-size:11px;color:var(--text-dim);margin-top:6px;display:flex;justify-content:space-between;}
+  .hl-section-title{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:16px;color:var(--text-hi);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .hl-section-title::before{content:'';width:3px;height:14px;background:var(--glow);border-radius:2px;display:inline-block;}
+  .hl-milestone{background:rgba(245,158,11,0.1);border:1px solid var(--amber);border-radius:8px;padding:10px 14px;font-size:13px;color:#fbbf24;margin-bottom:14px;}
+  .hl-assignment{background:#060a14;border:1px solid var(--sys-line);border-radius:8px;padding:14px 16px;margin-bottom:14px;}
+  .hl-assignment-tag{font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;color:var(--glow);font-weight:600;margin-bottom:8px;}
+  .hl-assignment-row{display:flex;gap:8px;font-size:13.5px;line-height:1.5;margin-bottom:4px;}
+  .hl-assignment-row:last-child{margin-bottom:0;}
+  .hl-assignment-label{color:var(--text-dim);flex-shrink:0;min-width:64px;font-size:11px;letter-spacing:.5px;padding-top:2px;}
+  .hl-assignment-val{color:var(--text-hi);}
+  textarea.hl-notes{width:100%;min-height:80px;background:#060a14;border:1px solid var(--sys-line);border-radius:8px;color:var(--text-hi);padding:12px;font-family:'Inter',sans-serif;font-size:14px;resize:vertical;}
+  textarea.hl-notes:focus{outline:none;border-color:var(--glow);}
+  .hl-date-badge{font-size:12px;color:var(--text-mid);margin-bottom:10px;}
+  .hl-btn{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;letter-spacing:.5px;border:1px solid var(--glow);background:rgba(76,141,255,0.1);color:var(--glow);padding:10px 18px;border-radius:7px;cursor:pointer;transition:.15s;}
+  .hl-btn:hover{background:rgba(76,141,255,0.22);}
+  .hl-btn:focus-visible{outline:2px solid var(--glow);outline-offset:2px;}
+  .hl-btn-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+  .hl-btn-purple{border-color:var(--purple);color:var(--purple);background:rgba(139,92,246,0.1);}
+  .hl-btn-purple:hover{background:rgba(139,92,246,0.22);}
+  .hl-btn-ghost{border-color:var(--sys-line);color:var(--text-mid);background:transparent;}
+  .hl-error{color:#ef4444;font-size:12.5px;margin-top:8px;}
+  .hl-confirm{color:#22c55e;font-size:12.5px;margin-top:8px;}
+  .hl-challenge-card{background:#060a14;border:1px solid var(--purple);border-radius:8px;padding:14px 16px;margin-top:14px;box-shadow:0 0 16px rgba(139,92,246,0.18);}
+  .hl-challenge-cat{font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;color:var(--purple);font-weight:600;}
+  .hl-challenge-text{font-size:14.5px;color:var(--text-hi);margin:8px 0 10px;line-height:1.5;}
+  .hl-challenge-xp{font-size:12px;color:var(--text-mid);}
+  .hl-challenge-match{font-size:11px;color:var(--rank-d);margin-top:6px;}
+  .hl-empty{color:var(--text-dim);font-size:13.5px;padding:14px 0;text-align:center;}
+  .hl-log-entry{border-bottom:1px solid var(--sys-line);padding:12px 0;}
+  .hl-log-entry:last-child{border-bottom:none;}
+  .hl-log-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .hl-log-date{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;color:var(--text-hi);}
+  .hl-log-xp{font-size:12px;color:var(--glow);}
+  .hl-log-week{font-size:11px;color:var(--text-dim);margin-bottom:4px;}
+  .hl-log-notes{font-size:13.5px;color:var(--text-mid);line-height:1.5;white-space:pre-wrap;}
+  .hl-log-challenge{font-size:12px;color:var(--purple);margin-top:4px;}
+  .hl-loading{text-align:center;color:var(--text-dim);font-size:13px;padding:40px 0;}
+</style>
+
+<div id="hl-root">
+  <div class="hl-wrap">
+    <div class="hl-header">
+      <div class="hl-eyebrow">Hunter association system</div>
+      <div class="hl-title">Data engineering ascension log</div>
+      <div class="hl-sub">Synced to your 12-week roadmap. Complete each day's assignment to advance.</div>
+    </div>
+    <div id="hl-loading" class="hl-loading">Awakening the system...</div>
+    <div id="hl-app" style="display:none;">
+
+      <div class="hl-panel">
+        <div class="hl-status-top">
+          <div class="hl-level-block">
+            <div id="hl-rank-badge" class="hl-rank-badge">E</div>
+            <div>
+              <div class="hl-level-num"><span id="hl-level">1</span></div>
+              <div class="hl-streak-label" id="hl-rank-name">RANK E HUNTER</div>
+            </div>
+          </div>
+          <div class="hl-streak">
+            <div class="hl-streak-num"><span id="hl-streak">0</span> day streak</div>
+            <div class="hl-streak-label">consecutive quest days</div>
+          </div>
+        </div>
+        <div class="hl-xpbar-track"><div id="hl-xpbar-fill" class="hl-xpbar-fill" style="width:0%"></div></div>
+        <div class="hl-xptext"><span id="hl-xp-current">0 / 100 XP</span><span id="hl-xp-next">100 XP to next level</span></div>
+        <div class="hl-stats-row">
+          <div class="hl-stat"><div class="hl-stat-num" id="hl-total-xp">0</div><div class="hl-stat-lbl">TOTAL XP</div></div>
+          <div class="hl-stat"><div class="hl-stat-num" id="hl-total-quests">0</div><div class="hl-stat-lbl">DAYS LOGGED</div></div>
+          <div class="hl-stat"><div class="hl-stat-num" id="hl-total-challenges">0</div><div class="hl-stat-lbl">CHALLENGES CLEARED</div></div>
+        </div>
+        <div class="hl-roadmap-track"><div id="hl-roadmap-fill" class="hl-roadmap-fill" style="width:0%"></div></div>
+        <div class="hl-roadmap-text"><span id="hl-roadmap-label">Week 1 of 12</span><span id="hl-roadmap-count">Day 0 of 72</span></div>
+      </div>
+
+      <div class="hl-panel">
+        <div class="hl-section-title">Today's quest</div>
+        <div id="hl-milestone-banner" style="display:none;" class="hl-milestone"></div>
+        <div class="hl-date-badge" id="hl-today-label"></div>
+        <div class="hl-assignment" id="hl-assignment-block">
+          <div class="hl-assignment-tag" id="hl-assignment-week"></div>
+          <div class="hl-assignment-row"><span class="hl-assignment-label">LEARN</span><span class="hl-assignment-val" id="hl-assignment-learn"></span></div>
+          <div class="hl-assignment-row"><span class="hl-assignment-label">PRACTICE</span><span class="hl-assignment-val" id="hl-assignment-practice"></span></div>
+        </div>
+        <textarea id="hl-notes-input" class="hl-notes" placeholder="Log what actually happened today: what you finished, what you got stuck on, what to revisit."></textarea>
+        <div class="hl-btn-row">
+          <button class="hl-btn" id="hl-complete-btn">Complete today's quest (+20 XP)</button>
+        </div>
+        <div id="hl-quest-msg"></div>
+      </div>
+
+      <div class="hl-panel">
+        <div class="hl-section-title">Random challenge</div>
+        <div id="hl-no-challenge">
+          <p style="font-size:13.5px;color:var(--text-mid);margin:0 0 10px;">Summons a trial weighted toward this week's skills, with occasional trials from earlier weeks to keep them sharp.</p>
+          <button class="hl-btn hl-btn-purple" id="hl-generate-btn">Generate challenge</button>
+        </div>
+        <div id="hl-challenge-active" style="display:none;">
+          <div class="hl-challenge-card">
+            <div class="hl-challenge-cat" id="hl-challenge-cat"></div>
+            <div class="hl-challenge-text" id="hl-challenge-text"></div>
+            <div class="hl-challenge-xp" id="hl-challenge-xp"></div>
+            <div class="hl-challenge-match" id="hl-challenge-match"></div>
+          </div>
+          <div class="hl-btn-row">
+            <button class="hl-btn hl-btn-purple" id="hl-clear-challenge-btn">Clear the trial</button>
+            <button class="hl-btn hl-btn-ghost" id="hl-reroll-btn">Reroll</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hl-panel">
+        <div class="hl-section-title">Quest history</div>
+        <div id="hl-history"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ---- Roadmap data: 12 weeks x 6 days (Mon-Sat), matches the day-by-day plan ----
+  var ROADMAP = [
+    // Week 1 - SQL + Data Modeling (tag: sql)
+    {week:1,phase:'SQL + data modeling',tag:'sql',learn:'Window functions: ROW_NUMBER, RANK, LAG/LEAD',practice:'Solve 4 window function problems'},
+    {week:1,phase:'SQL + data modeling',tag:'sql',learn:'CTEs and recursive CTEs',practice:'Rewrite 3 subqueries as CTEs, solve 1 recursive CTE'},
+    {week:1,phase:'SQL + data modeling',tag:'sql',learn:'Query optimization & execution plans',practice:'Run EXPLAIN on 3 queries, spot seq scans vs index scans'},
+    {week:1,phase:'SQL + data modeling',tag:'sql',learn:'Indexing strategy: B-tree, composite, covering',practice:'Create indexes, compare query time before/after'},
+    {week:1,phase:'SQL + data modeling',tag:'sql',learn:'Star vs snowflake schema',practice:'Sketch a star schema for an e-commerce dataset'},
+    {week:1,phase:'SQL + data modeling',tag:'sql',learn:'SCD Types 1 / 2 / 3',practice:'Design an SCD Type 2 customers dimension; review the week'},
+    // Week 2 - Python for DE (tag: python)
+    {week:2,phase:'Python for data engineering',tag:'python',learn:'OOP for pipeline code (Extractor/Transformer/Loader)',practice:'Refactor a script into ETL classes'},
+    {week:2,phase:'Python for data engineering',tag:'python',learn:'Error handling & retries (exponential backoff)',practice:'Add retry logic to an API call script'},
+    {week:2,phase:'Python for data engineering',tag:'python',learn:'Logging best practices for pipelines',practice:'Add structured logging to your ETL script'},
+    {week:2,phase:'Python for data engineering',tag:'python',learn:'Working with APIs: auth, pagination, rate limits',practice:'Build a script to pull paginated API data'},
+    {week:2,phase:'Python for data engineering',tag:'python',learn:'Pandas at scale: chunking, dtypes, memory',practice:'Process a large CSV in chunks, compare memory use'},
+    {week:2,phase:'Python for data engineering',tag:'python',learn:'Intro to PySpark syntax',practice:'Load a CSV into a Spark DataFrame; review the week'},
+    // Week 3 - AWS (tag: aws)
+    {week:3,phase:'AWS data services',tag:'aws',learn:'S3 fundamentals: storage classes, lifecycle policies',practice:'Upload a dataset to S3, set a lifecycle rule'},
+    {week:3,phase:'AWS data services',tag:'aws',learn:'S3 partitioning strategy',practice:'Reorganize a dataset into partitioned folders'},
+    {week:3,phase:'AWS data services',tag:'aws',learn:'AWS Glue: crawlers & Data Catalog',practice:'Run a Glue crawler on your S3 data'},
+    {week:3,phase:'AWS data services',tag:'aws',learn:'AWS Glue Jobs',practice:'Build a simple Glue ETL job'},
+    {week:3,phase:'AWS data services',tag:'aws',learn:'Amazon Athena: querying S3 with SQL',practice:'Query via Athena, compare partition pruning cost/speed'},
+    {week:3,phase:'AWS data services',tag:'aws',learn:'Redshift architecture: distribution & sort keys',practice:'Sketch a Redshift table design; review the week'},
+    // Week 4 - Warehousing / batch vs streaming (tag: warehousing)
+    {week:4,phase:'Warehousing & batch vs streaming',tag:'warehousing',learn:'OLTP vs OLAP',practice:'Classify 5 sample workloads as OLTP or OLAP'},
+    {week:4,phase:'Warehousing & batch vs streaming',tag:'warehousing',learn:'Data lake vs warehouse vs lakehouse',practice:'Write a comparison doc; justify your project\'s approach'},
+    {week:4,phase:'Warehousing & batch vs streaming',tag:'warehousing',learn:'Batch vs streaming trade-offs',practice:'Sketch a decision tree across 3 use cases'},
+    {week:4,phase:'Warehousing & batch vs streaming',tag:'warehousing',learn:'CDC (Change Data Capture) concepts',practice:'Research Debezium/CDC, write a short summary'},
+    {week:4,phase:'Warehousing & batch vs streaming',tag:'python',learn:'Idempotency in pipelines',practice:'Make your ETL script safe to rerun'},
+    {week:4,phase:'Warehousing & batch vs streaming',tag:'warehousing',learn:'Load dataset into Redshift/Snowflake',practice:'Write analytical queries; document design; review the week'},
+    // Week 5 - Airflow (tag: airflow)
+    {week:5,phase:'Apache Airflow',tag:'airflow',learn:'Airflow architecture (scheduler, webserver, executor)',practice:'Install Airflow via Docker'},
+    {week:5,phase:'Apache Airflow',tag:'airflow',learn:'DAGs & operators',practice:'Write your first DAG with 1 task'},
+    {week:5,phase:'Apache Airflow',tag:'airflow',learn:'Task dependencies & scheduling',practice:'Add 2 more tasks with dependencies'},
+    {week:5,phase:'Apache Airflow',tag:'airflow',learn:'Sensors & XComs',practice:'Add a sensor and pass data via XCom'},
+    {week:5,phase:'Apache Airflow',tag:'airflow',learn:'Best practices: idempotency, retries, backfills',practice:'Configure retries and test a backfill'},
+    {week:5,phase:'Apache Airflow',tag:'airflow',learn:'Consolidation',practice:'Convert your Week 2 ETL fully into an Airflow DAG; review'},
+    // Week 6 - Spark (tag: spark)
+    {week:6,phase:'Apache Spark / PySpark',tag:'spark',learn:'Spark architecture (driver/executor)',practice:'Set up a local PySpark environment'},
+    {week:6,phase:'Apache Spark / PySpark',tag:'spark',learn:'Lazy evaluation: transformations vs actions',practice:'Observe lazy execution behavior'},
+    {week:6,phase:'Apache Spark / PySpark',tag:'spark',learn:'DataFrame API: select, filter, groupBy',practice:'Run aggregations on a large sample dataset'},
+    {week:6,phase:'Apache Spark / PySpark',tag:'spark',learn:'Joins at scale & partitioning',practice:'Join large datasets, observe shuffle in Spark UI'},
+    {week:6,phase:'Apache Spark / PySpark',tag:'spark',learn:'Writing output: Parquet & partitioning',practice:'Write partitioned Parquet output'},
+    {week:6,phase:'Apache Spark / PySpark',tag:'spark',learn:'Consolidation',practice:'Process the full dataset end-to-end; review Spark UI'},
+    // Week 7 - dbt (tag: dbt)
+    {week:7,phase:'dbt (data build tool)',tag:'dbt',learn:'dbt project structure & models',practice:'Initialize a dbt project on your warehouse'},
+    {week:7,phase:'dbt (data build tool)',tag:'dbt',learn:'Staging models pattern',practice:'Build staging models for raw sources'},
+    {week:7,phase:'dbt (data build tool)',tag:'dbt',learn:'Intermediate & mart models',practice:'Build 1 intermediate + 1 mart model'},
+    {week:7,phase:'dbt (data build tool)',tag:'dbt',learn:'dbt tests',practice:'Add not_null/unique/relationship tests'},
+    {week:7,phase:'dbt (data build tool)',tag:'dbt',learn:'Sources & documentation',practice:'Define sources.yml, generate dbt docs'},
+    {week:7,phase:'dbt (data build tool)',tag:'dbt',learn:'Consolidation',practice:'Clean up the project, review lineage, push to GitHub'},
+    // Week 8 - Streaming + capstone kickoff (tag: streaming)
+    {week:8,phase:'Streaming basics + capstone kickoff',tag:'streaming',learn:'Kafka fundamentals: topics, partitions, brokers',practice:'Take notes on Kafka core concepts'},
+    {week:8,phase:'Streaming basics + capstone kickoff',tag:'streaming',learn:'Kafka producers/consumers',practice:'Optional: run a local Kafka producer/consumer'},
+    {week:8,phase:'Streaming basics + capstone kickoff',tag:'streaming',learn:'AWS Kinesis as managed alternative',practice:'Write a short Kafka vs Kinesis comparison'},
+    {week:8,phase:'Streaming basics + capstone kickoff',tag:'systemdesign',learn:'Capstone project planning',practice:'Choose your capstone idea, sketch the architecture'},
+    {week:8,phase:'Streaming basics + capstone kickoff',tag:'aws',learn:'Capstone setup',practice:'Set up repo, confirm data source, test the API pull'},
+    {week:8,phase:'Streaming basics + capstone kickoff',tag:'capstone',learn:'—',practice:'Start applying to jobs; begin capstone ingestion',milestone:'Milestone: start applying to internships/junior roles now. Update resume + LinkedIn.'},
+    // Week 9 - Capstone part 1 (tag: capstone)
+    {week:9,phase:'Capstone build — part 1',tag:'capstone',learn:'Data quality check patterns',practice:'Build the ingestion layer: pull data, land raw in S3'},
+    {week:9,phase:'Capstone build — part 1',tag:'aws',learn:'S3 landing zone design',practice:'Add proper partitioning to the raw landing zone'},
+    {week:9,phase:'Capstone build — part 1',tag:'airflow',learn:'Orchestration patterns',practice:'Set up an Airflow DAG to orchestrate ingestion'},
+    {week:9,phase:'Capstone build — part 1',tag:'spark',learn:'Transformation design',practice:'Build the transformation layer (Spark or dbt)'},
+    {week:9,phase:'Capstone build — part 1',tag:'dbt',learn:'Data validation approaches',practice:'Add data quality checks (nulls, dupes, schema)'},
+    {week:9,phase:'Capstone build — part 1',tag:'capstone',learn:'—',practice:'Load transformed data into the warehouse; keep applying'},
+    // Week 10 - Capstone part 2 (tag: capstone)
+    {week:10,phase:'Capstone build — part 2',tag:'airflow',learn:'Monitoring & alerting basics',practice:'Add Airflow alerts on task failure'},
+    {week:10,phase:'Capstone build — part 2',tag:'systemdesign',learn:'Architecture documentation practices',practice:'Draw the final architecture diagram'},
+    {week:10,phase:'Capstone build — part 2',tag:'capstone',learn:'Writing technical READMEs',practice:'Write the README: design decisions and trade-offs'},
+    {week:10,phase:'Capstone build — part 2',tag:'aws',learn:'Cost optimization basics',practice:'Review the pipeline for cost inefficiencies'},
+    {week:10,phase:'Capstone build — part 2',tag:'capstone',learn:'Final review pass',practice:'Test the full pipeline end-to-end, fix breaks'},
+    {week:10,phase:'Capstone build — part 2',tag:'capstone',learn:'—',practice:'Final polish, push to GitHub; keep applying',milestone:'Milestone: capstone project should be complete and on GitHub by tonight.'},
+    // Week 11 - System design + behavioral (tag: systemdesign)
+    {week:11,phase:'System design + behavioral prep',tag:'systemdesign',learn:'Batch pipeline design pattern',practice:'Sketch a pipeline for 1TB/day of clickstream data'},
+    {week:11,phase:'System design + behavioral prep',tag:'systemdesign',learn:'Warehouse design pattern',practice:'Sketch a warehouse design for a ride-sharing company'},
+    {week:11,phase:'System design + behavioral prep',tag:'systemdesign',learn:'Common interview question review',practice:'Mock system design question #1, out loud'},
+    {week:11,phase:'System design + behavioral prep',tag:'systemdesign',learn:'Common interview question review',practice:'Mock system design question #2'},
+    {week:11,phase:'System design + behavioral prep',tag:'interview',learn:'STAR method for behavioral questions',practice:'Write 5 STAR-format stories from your projects'},
+    {week:11,phase:'System design + behavioral prep',tag:'interview',learn:'—',practice:'Full mock interview (system design + behavioral)'},
+    // Week 12 - Mock interviews + application sprint (tag: interview)
+    {week:12,phase:'Mock interviews + application sprint',tag:'sql',learn:'Review SQL edge cases from mocks',practice:'Redo missed SQL problems, find 3 similar new ones'},
+    {week:12,phase:'Mock interviews + application sprint',tag:'spark',learn:'Review Spark internals gaps',practice:'Re-explain shuffle/partitioning out loud'},
+    {week:12,phase:'Mock interviews + application sprint',tag:'systemdesign',learn:'Review system design gaps',practice:'Redo your weakest Week 11 mock design'},
+    {week:12,phase:'Mock interviews + application sprint',tag:'interview',learn:'—',practice:'Mock interview #1 (Pramp or peer)'},
+    {week:12,phase:'Mock interviews + application sprint',tag:'interview',learn:'—',practice:'Mock interview #2; tailor resume per role'},
+    {week:12,phase:'Mock interviews + application sprint',tag:'interview',learn:'—',practice:'Heavy application day: apply to 10-15 roles',milestone:'Final sprint: this is the week to maximize applications and interview reps.'}
+  ];
+
+  var CHALLENGES = [
+    {cat:'SQL trial', tag:'sql', text:'Write a query using a window function to find the 2nd highest salary per department.', xp:15},
+    {cat:'SQL trial', tag:'sql', text:'Write a recursive CTE to generate a sequence of dates for the last 30 days.', xp:20},
+    {cat:'Python trial', tag:'python', text:'Add retry logic with exponential backoff to any API call script you have.', xp:15},
+    {cat:'Python trial', tag:'python', text:'Refactor a script you already wrote into an Extractor/Transformer/Loader class structure.', xp:20},
+    {cat:'AWS trial', tag:'aws', text:'Set up an S3 lifecycle rule that moves objects to Glacier after 30 days.', xp:15},
+    {cat:'AWS trial', tag:'aws', text:'Explain out loud, in under 2 minutes, why partitioning an S3 dataset by date reduces Athena query cost.', xp:10},
+    {cat:'Airflow trial', tag:'airflow', text:'Add a sensor to one of your DAGs that waits for an upstream file to land before running.', xp:20},
+    {cat:'Airflow trial', tag:'airflow', text:'Trigger a manual backfill on one of your existing DAGs and verify it reruns cleanly.', xp:15},
+    {cat:'Spark trial', tag:'spark', text:'Take a join you have already written and force a broadcast join instead, then compare the Spark UI plan.', xp:25},
+    {cat:'Spark trial', tag:'spark', text:'Explain what a shuffle is and name two operations that trigger one.', xp:10},
+    {cat:'dbt trial', tag:'dbt', text:'Add a custom singular test to one of your dbt models that checks a business rule, not just not-null.', xp:20},
+    {cat:'System design trial', tag:'systemdesign', text:'Whiteboard a pipeline design for ingesting 1TB/day of clickstream data. Time yourself: 15 minutes.', xp:30},
+    {cat:'System design trial', tag:'systemdesign', text:'Design a warehouse schema for a ride-sharing company. List your fact and dimension tables.', xp:25},
+    {cat:'Behavioral trial', tag:'interview', text:'Write one STAR-format story about a time a pipeline or script you wrote failed, and how you fixed it.', xp:15},
+    {cat:'Data modeling trial', tag:'warehousing', text:'Convert one of your existing tables into an SCD Type 2 design with valid_from/valid_to columns.', xp:20},
+    {cat:'Streaming trial', tag:'streaming', text:'Sketch how you would move one of your batch jobs to a streaming design using Kafka or Kinesis.', xp:20},
+    {cat:'Capstone trial', tag:'capstone', text:'Deliberately break one task in your capstone DAG, then fix it using only the Airflow logs.', xp:20}
+  ];
+
+  var STORAGE_KEY = 'hunters_log_state_v2';
+  var state = null;
+  var currentChallenge = null;
+
+  function defaultState(){
+    return { totalXp:0, streak:0, lastLogDate:null, challengesCleared:0, logs:[] };
+  }
+
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+
+  function daysBetween(a,b){
+    var da = new Date(a+'T00:00:00');
+    var db = new Date(b+'T00:00:00');
+    return Math.round((db-da)/86400000);
+  }
+
+  function levelFromXp(xp){
+    return Math.floor(xp/100)+1;
+  }
+
+  function rankFromLevel(lvl){
+    if(lvl>=26) return {code:'S', color:'var(--rank-s)', name:'RANK S HUNTER'};
+    if(lvl>=21) return {code:'A', color:'var(--rank-a)', name:'RANK A HUNTER'};
+    if(lvl>=16) return {code:'B', color:'var(--rank-b)', name:'RANK B HUNTER'};
+    if(lvl>=11) return {code:'C', color:'var(--rank-c)', name:'RANK C HUNTER'};
+    if(lvl>=6) return {code:'D', color:'var(--rank-d)', name:'RANK D HUNTER'};
+    return {code:'E', color:'var(--rank-e)', name:'RANK E HUNTER'};
+  }
+
+  function currentDayIndex(){
+    return Math.min(state.logs.length, ROADMAP.length-1);
+  }
+
+  async function loadState(){
+    try{
+      var res = await window.storage.get(STORAGE_KEY, false);
+      if(res && res.value){
+        state = JSON.parse(res.value);
+      } else {
+        state = defaultState();
+      }
+    }catch(e){
+      state = defaultState();
+    }
+  }
+
+  async function saveState(){
+    try{
+      await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+    }catch(e){
+      showQuestMsg('Could not save progress. Your session data may not persist.', true);
+    }
+  }
+
+  function showQuestMsg(text, isError){
+    var el = document.getElementById('hl-quest-msg');
+    el.className = isError ? 'hl-error' : 'hl-confirm';
+    el.textContent = text;
+    setTimeout(function(){ el.textContent=''; }, 4000);
+  }
+
+  function escapeHtml(s){
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function render(){
+    var lvl = levelFromXp(state.totalXp);
+    var rank = rankFromLevel(lvl);
+    var xpIntoLevel = state.totalXp % 100;
+
+    document.getElementById('hl-level').textContent = lvl;
+    document.getElementById('hl-rank-name').textContent = rank.name;
+    var badge = document.getElementById('hl-rank-badge');
+    badge.textContent = rank.code;
+    badge.style.color = rank.color;
+    document.getElementById('hl-streak').textContent = state.streak;
+    document.getElementById('hl-xpbar-fill').style.width = xpIntoLevel + '%';
+    document.getElementById('hl-xp-current').textContent = xpIntoLevel + ' / 100 XP';
+    document.getElementById('hl-xp-next').textContent = (100-xpIntoLevel) + ' XP to level ' + (lvl+1);
+    document.getElementById('hl-total-xp').textContent = state.totalXp;
+    document.getElementById('hl-total-quests').textContent = state.logs.length;
+    document.getElementById('hl-total-challenges').textContent = state.challengesCleared;
+
+    var dayIdx = currentDayIndex();
+    var day = ROADMAP[dayIdx];
+    var roadmapPct = Math.min(100, Math.round((state.logs.length/ROADMAP.length)*100));
+    document.getElementById('hl-roadmap-fill').style.width = roadmapPct + '%';
+    document.getElementById('hl-roadmap-label').textContent = 'Week ' + day.week + ' of 12';
+    document.getElementById('hl-roadmap-count').textContent = 'Day ' + Math.min(state.logs.length+1, ROADMAP.length) + ' of ' + ROADMAP.length;
+
+    document.getElementById('hl-today-label').textContent = 'Today: ' + todayStr();
+
+    if(state.logs.length >= ROADMAP.length){
+      document.getElementById('hl-assignment-week').textContent = 'ROADMAP COMPLETE';
+      document.getElementById('hl-assignment-learn').textContent = 'You have cleared all 72 assignment days.';
+      document.getElementById('hl-assignment-practice').textContent = 'Keep logging interview prep and applications below.';
+    } else {
+      document.getElementById('hl-assignment-week').textContent = 'WEEK ' + day.week + ' — ' + day.phase.toUpperCase();
+      document.getElementById('hl-assignment-learn').textContent = day.learn;
+      document.getElementById('hl-assignment-practice').textContent = day.practice;
+    }
+
+    var banner = document.getElementById('hl-milestone-banner');
+    if(day.milestone){
+      banner.style.display = 'block';
+      banner.textContent = day.milestone;
+    } else {
+      banner.style.display = 'none';
+    }
+
+    var today = todayStr();
+    var todaysLog = state.logs.find(function(l){ return l.date===today; });
+    if(todaysLog){
+      document.getElementById('hl-notes-input').value = todaysLog.notes;
+      document.getElementById('hl-complete-btn').textContent = 'Update today\'s notes';
+    } else {
+      document.getElementById('hl-notes-input').value = '';
+      document.getElementById('hl-complete-btn').textContent = 'Complete today\'s quest (+20 XP)';
+    }
+
+    var hist = document.getElementById('hl-history');
+    if(state.logs.length===0){
+      hist.innerHTML = '<div class="hl-empty">No quests logged yet. Complete today\'s quest to begin your ascension.</div>';
+    } else {
+      var sorted = state.logs.slice().sort(function(a,b){ return b.date.localeCompare(a.date); });
+      hist.innerHTML = sorted.map(function(l){
+        var challengeLine = l.challengeCleared ? '<div class="hl-log-challenge">Cleared: '+escapeHtml(l.challengeCleared)+'</div>' : '';
+        var weekLine = l.week ? '<div class="hl-log-week">Week '+l.week+(l.phase ? ' — '+escapeHtml(l.phase) : '')+'</div>' : '';
+        return '<div class="hl-log-entry">'+
+          '<div class="hl-log-top"><span class="hl-log-date">'+l.date+'</span><span class="hl-log-xp">+'+l.xpEarned+' XP</span></div>'+
+          weekLine+
+          '<div class="hl-log-notes">'+escapeHtml(l.notes || '(no notes)')+'</div>'+
+          challengeLine+
+        '</div>';
+      }).join('');
+    }
+  }
+
+  async function completeQuest(){
+    var notesEl = document.getElementById('hl-notes-input');
+    var notes = notesEl.value.trim();
+    if(!notes){
+      showQuestMsg('Write a short note about today before completing the quest.', true);
+      return;
+    }
+    var today = todayStr();
+    var existing = state.logs.find(function(l){ return l.date===today; });
+
+    if(existing){
+      existing.notes = notes;
+      await saveState();
+      showQuestMsg('Notes updated for today.', false);
+      render();
+      return;
+    }
+
+    if(state.lastLogDate){
+      var gap = daysBetween(state.lastLogDate, today);
+      if(gap===1){ state.streak += 1; }
+      else if(gap>1){ state.streak = 1; }
+    } else {
+      state.streak = 1;
+    }
+    state.lastLogDate = today;
+    state.totalXp += 20;
+
+    var dayIdx = currentDayIndex();
+    var day = ROADMAP[dayIdx];
+    state.logs.push({date:today, notes:notes, xpEarned:20, challengeCleared:null, week:day.week, phase:day.phase});
+    await saveState();
+    showQuestMsg('Quest complete. +20 XP earned. Roadmap advanced to the next day.', false);
+    render();
+  }
+
+  function generateChallenge(){
+    var dayIdx = currentDayIndex();
+    var currentTag = ROADMAP[dayIdx].tag;
+    var matched = CHALLENGES.filter(function(c){ return c.tag===currentTag; });
+    var pool;
+    var isMatched;
+    if(matched.length>0 && Math.random()<0.7){
+      pool = matched;
+      isMatched = true;
+    } else {
+      pool = CHALLENGES;
+      isMatched = false;
+    }
+    currentChallenge = pool[Math.floor(Math.random()*pool.length)];
+    document.getElementById('hl-no-challenge').style.display = 'none';
+    document.getElementById('hl-challenge-active').style.display = 'block';
+    document.getElementById('hl-challenge-cat').textContent = currentChallenge.cat;
+    document.getElementById('hl-challenge-text').textContent = currentChallenge.text;
+    document.getElementById('hl-challenge-xp').textContent = 'Reward: +' + currentChallenge.xp + ' XP';
+    var matchEl = document.getElementById('hl-challenge-match');
+    if(currentChallenge.tag===currentTag){
+      matchEl.textContent = 'Matches this week\'s focus';
+    } else {
+      matchEl.textContent = 'Review trial from an earlier week';
+    }
+  }
+
+  async function clearChallenge(){
+    if(!currentChallenge) return;
+    var today = todayStr();
+    var todaysLog = state.logs.find(function(l){ return l.date===today; });
+    state.totalXp += currentChallenge.xp;
+    state.challengesCleared += 1;
+    if(todaysLog){
+      todaysLog.challengeCleared = currentChallenge.cat + ' (+' + currentChallenge.xp + ' XP)';
+      todaysLog.xpEarned += currentChallenge.xp;
+    }
+    await saveState();
+    currentChallenge = null;
+    document.getElementById('hl-no-challenge').style.display = 'block';
+    document.getElementById('hl-challenge-active').style.display = 'none';
+    showQuestMsg('Challenge cleared. XP added.', false);
+    render();
+  }
+
+  async function init(){
+    await loadState();
+    document.getElementById('hl-loading').style.display = 'none';
+    document.getElementById('hl-app').style.display = 'block';
+    render();
+
+    document.getElementById('hl-complete-btn').addEventListener('click', completeQuest);
+    document.getElementById('hl-generate-btn').addEventListener('click', generateChallenge);
+    document.getElementById('hl-reroll-btn').addEventListener('click', generateChallenge);
+    document.getElementById('hl-clear-challenge-btn').addEventListener('click', clearChallenge);
+  }
+
+  init();
+})();
+</script>
